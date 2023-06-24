@@ -35,18 +35,18 @@ module.exports.getUserId = (req, res) => {
   return  User.findById(userId)
   .then((user) => {
       if (!user) {
-        return res.status(400).send({message: 'Юзер не найден'});
+        return res.status(404).send({message: 'Юзер не найден'});
       }
       return res.status(200).send(user);
   })
   .catch(() => {
-    return res.status(500).send({message: 'Неверный id'});
+    return res.status(400).send({message: 'Неверный id'});
   })
 };
 //обновим профиль
 module.exports.updateUser = (req, res) => {
   const {name, about} = req.body;
-  return  User.findByIdAndUpdate({name, about}, req.user._id)
+  return  User.findByIdAndUpdate({name, about}, req.user._id, { new: true })
     .then((user) =>  {
       if (!user) {
         return res.status(404).send({message: 'Юзер не найден'});
@@ -66,7 +66,7 @@ module.exports.updateUser = (req, res) => {
 //обновим аватар
 module.exports.updateAvatar = (req, res) => {
   const {avatar} = req.body;
-  return  User.findByIdAndUpdate({avatar}, req.user._id)
+  return  User.findByIdAndUpdate({avatar}, req.user._id, { new: true })
     .then((user) =>  {
       if (!user) {
         return res.status(404).send({message: 'Юзер не найден'});
