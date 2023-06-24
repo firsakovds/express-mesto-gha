@@ -23,7 +23,7 @@ module.exports.createUsers = (req, res) => {
 //найдем всех юзеров
 module.exports.getUsers = (req, res) => {
   return User.find({})
-    .then((user) => {return res.status(201).send({user})})
+    .then((user) => {return res.status(200).send({user})})
     .catch(() => {
       return res.status(500).send({ message: 'Ошибка сервера' });
       });
@@ -35,7 +35,7 @@ module.exports.getUserId = (req, res) => {
   return  User.findById(userId)
   .then((user) => {
       if (!user) {
-        return res.status(404).send({message: 'Юзер не найден'});
+        return res.status(400).send({message: 'Юзер не найден'});
       }
       return res.status(200).send(user);
   })
@@ -58,7 +58,7 @@ module.exports.updateUser = (req, res) => {
         return res.status(400).send({ message: 'Ошибка валидации' });
         //console.log(err)
       } else {
-        return  res.status(500).send({ message: 'Ошибка сервера' });
+        return  res.status(400).send({ message: 'Ошибка сервера' });
       }
       });
 };
