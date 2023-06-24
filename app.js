@@ -6,7 +6,7 @@ const cardRouter = require('./routes/cards');
 // Слушаем 3000 порт
 const { PORT = 3000 } = process.env;
 
-mongoose.connect('mongodb://0.0.0.0:27017/mestodb', {
+mongoose.connect('mongodb://localhost:27017/mestodb', {
  useNewUrlParser: true,
 }).then(() => {
   console.log('Хьюстон! Мы на связи!');

@@ -46,12 +46,12 @@ module.exports.getUserId = (req, res) => {
 //обновим профиль
 module.exports.updateUser = (req, res) => {
   const {name, about} = req.body;
-  return  User.findByIdAndUpdate(req.user._id, {name, about}, {new: true}, {runValidators: true})
+  return  User.findByIdAndUpdate(req.user._id, {name, about}, {new: true, runValidators: true})
     .then((user) =>  {
       if (!user) {
         return res.status(200).send({message: 'Юзер не найден'});
       }
-      return res.status(400).send(user);
+      return res.status(200).send(user);
   })
     .catch((err) => {
       if (err.name === 'ValidationError') {
@@ -66,7 +66,7 @@ module.exports.updateUser = (req, res) => {
 //обновим аватар
 module.exports.updateAvatar = (req, res) => {
   const {avatar} = req.body;
-  return  User.findByIdAndUpdate(req.user._id, {avatar}, {new: true}, {runValidators: true})
+  return  User.findByIdAndUpdate(req.user._id, {avatar}, {new: true, runValidators: true})
     .then((user) =>  {
       if (!user) {
         return res.status(404).send({message: 'Юзер не найден'});
