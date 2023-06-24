@@ -61,8 +61,13 @@ module.exports.likeCard = (req, res) => {
         return res.status(200).send(card);
       }
     })
-    .catch(() => {
-      return res.status(400).send({ message: "Неверный id" });
+    .catch((err) => {
+      if (err.name === "CastError") {
+        return res.status(400).send({ message: "Неверный id" });
+        //console.log(err)
+      } else {
+        return res.status(500).send({ message: "Ошибка сервера" });
+      }
     });
 };
 //уберем лайк
@@ -79,8 +84,13 @@ module.exports.dislikeCard = (req, res) => {
         return res.status(200).send(card);
       }
     })
-    .catch(() => {
-      return res.status(400).send({ message: "Неверный id" });
+    .catch((err) => {
+      if (err.name === "CastError") {
+        return res.status(400).send({ message: "Неверный id" });
+        //console.log(err)
+      } else {
+        return res.status(500).send({ message: "Ошибка сервера" });
+      }
     });
 };
 //module.exports.createCard = (req, res) => {
