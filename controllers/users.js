@@ -46,10 +46,10 @@ module.exports.getUserId = (req, res) => {
 //обновим профиль
 module.exports.updateUser = (req, res) => {
   const {name, about} = req.body;
-  return  User.findByIdAndUpdate({name, about}, req.user._id, { new: true })
+  return  User.findByIdAndUpdate(req.user._id, {name, about}, {new: true})
     .then((user) =>  {
       if (!user) {
-        return res.status(404).send({message: 'Юзер не найден'});
+        return res.status(200).send({message: 'Юзер не найден'});
       }
       return res.status(200).send(user);
   })
@@ -66,7 +66,7 @@ module.exports.updateUser = (req, res) => {
 //обновим аватар
 module.exports.updateAvatar = (req, res) => {
   const {avatar} = req.body;
-  return  User.findByIdAndUpdate({avatar}, req.user._id, { new: true })
+  return  User.findByIdAndUpdate(req.user._id, {avatar}, {new: true})
     .then((user) =>  {
       if (!user) {
         return res.status(404).send({message: 'Юзер не найден'});

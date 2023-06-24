@@ -2,7 +2,7 @@ const Card = require('../models/card');
 //найдем все карточки
 module.exports.getCards = (req, res) => {
   return Card.find({})
-   .then((card) => { return res.status(201).send({card})})
+   .then((card) => { return res.status(200).send({card})})
    .catch(() => {
     return res.status(500).send({ message: 'Ошибка сервера' });
      });
