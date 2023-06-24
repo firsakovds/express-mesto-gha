@@ -1,8 +1,7 @@
-// models/user.js
-const mongoose = require('mongoose');
-
+const mongoose = require("mongoose");
 const cardSchema = new mongoose.Schema({
-  name: { // у пользователя есть имя — опишем требования к имени в схеме:
+  name: {
+    // у пользователя есть имя — опишем требования к имени в схеме:
     type: String, // имя — это строка
     required: true, // оно должно быть у каждого пользователя, так что имя — обязательное поле
     minlength: 2, // минимальная длина имени — 2 символа
@@ -15,19 +14,20 @@ const cardSchema = new mongoose.Schema({
   owner: {
     type: String, // тип — String
     required: true,
-    ref: 'user',
-    type: mongoose.Schema.Types.ObjectId
-  },
-  likes: [{
-        ref: 'user',
+    ref: "user",
     type: mongoose.Schema.Types.ObjectId,
-    default: [],
-  }],
-  createdAt : {
+  },
+  likes: [
+    {
+      ref: "user",
+      type: mongoose.Schema.Types.ObjectId,
+      default: [],
+    },
+  ],
+  createdAt: {
     type: Date,
-    default: Date.now
-  }
-
+    default: Date.now,
+  },
 });
 // создаём модель и экспортируем её
-module.exports = mongoose.model('card', cardSchema);
+module.exports = mongoose.model("card", cardSchema);
