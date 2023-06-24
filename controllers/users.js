@@ -39,8 +39,13 @@ module.exports.getUserId = (req, res) => {
       }
       return res.status(200).send(user);
     })
-    .catch(() => {
-      return res.status(400).send({ message: "Неверный id" });
+    .catch((err) => {
+      if (err.name === "CastError") {
+        return res.status(400).send({ message: "Неверный id" });
+        //console.log(err)
+      } else {
+        return res.status(500).send({ message: "Ошибка сервера" });
+      }
     });
 };
 //обновим профиль
@@ -53,7 +58,7 @@ module.exports.updateUser = (req, res) => {
   )
     .then((user) => {
       if (!user) {
-        return res.status(200).send({ message: "Юзер не найден" });
+        return res.status(404).send({ message: "Юзер не найден" });
       }
       return res.status(200).send(user);
     })
@@ -62,7 +67,7 @@ module.exports.updateUser = (req, res) => {
         return res.status(400).send({ message: "Ошибка валидации" });
         //console.log(err)
       } else {
-        return res.status(400).send({ message: "Ошибка сервера" });
+        return res.status(500).send({ message: "Ошибка сервера" });
       }
     });
 };

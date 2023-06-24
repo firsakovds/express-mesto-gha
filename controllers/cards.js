@@ -38,8 +38,13 @@ module.exports.deleteCards = (req, res) => {
         return res.status(200).send(card);
       }
     })
-    .catch(() => {
-      return res.status(400).send({ message: "Неверный id" });
+    .catch((err) => {
+      if (err.name === "CastError") {
+        return res.status(400).send({ message: "Неверный id" });
+        //console.log(err)
+      } else {
+        return res.status(500).send({ message: "Ошибка сервера" });
+      }
     });
 };
 // поставим лайк
