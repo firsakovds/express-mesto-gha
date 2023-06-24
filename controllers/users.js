@@ -7,40 +7,78 @@ const User = require('../models/user');
 module.exports.createUsers = (req, res) => {
   const {name, about, avatar} = req.body;
 
-   User.create({name, about, avatar})
-    .then((user) => res.status(201).send({user}))
+  return  User.create({name, about, avatar})
+    .then((user) =>  {
+      return res.status(201).send({user})
+    })
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        res.status(400).send({ message: 'Ошибка валидации' });
-        console.log(err)
+        return res.status(400).send({ message: 'Ошибка валидации' });
+        //console.log(err)
       } else {
-        res.status(500).send({ message: 'Ошибка сервера' });
+        return  res.status(500).send({ message: 'Ошибка сервера' });
       }
       });
 };
 //найдем всех юзеров
 module.exports.getUsers = (req, res) => {
-   User.find({})
-    .then((user) => res.status(201).send({user}))
+  return User.find({})
+    .then((user) => {return res.status(201).send({user})})
     .catch(() => {
-      res.status(500).send({ message: 'Ошибка сервера' });
+      return res.status(500).send({ message: 'Ошибка сервера' });
       });
 };
 
 //найдем конкретного юзера
 module.exports.getUserId = (req, res) => {
   const {userId} = req.params;
-  User.findById(userId)
+  return  User.findById(userId)
   .then((user) => {
       if (!user) {
-          res.status(404).send({message: 'Юзер не найден'});
+        return res.status(404).send({message: 'Юзер не найден'});
       }
-       res.status(200).send(user);
+      return res.status(200).send(user);
   })
   .catch(() => {
-       res.status(500).send({message: 'Неверный id'});
+    return res.status(500).send({message: 'Неверный id'});
   })
 };
+//обновим профиль
+module.exports.updateUser = (req, res) => {
+  const {name, about} = req.body;
+  return  User.findByIdAndUpdate({name, about}, req.user._id)
+    .then((user) =>  {
+      if (!user) {
+        return res.status(404).send({message: 'Юзер не найден'});
+      }
+      return res.status(200).send(user);
+  })
+    .catch((err) => {
+      if (err.name === 'ValidationError') {
+        return res.status(400).send({ message: 'Ошибка валидации' });
+        //console.log(err)
+      } else {
+        return  res.status(500).send({ message: 'Ошибка сервера' });
+      }
+      });
+};
 
-
-
+//обновим аватар
+module.exports.updateAvatar = (req, res) => {
+  const {avatar} = req.body;
+  return  User.findByIdAndUpdate({avatar}, req.user._id)
+    .then((user) =>  {
+      if (!user) {
+        return res.status(404).send({message: 'Юзер не найден'});
+      }
+      return res.status(200).send(user);
+  })
+    .catch((err) => {
+      if (err.name === 'ValidationError') {
+        return res.status(400).send({ message: 'Ошибка валидации' });
+        //console.log(err)
+      } else {
+        return  res.status(500).send({ message: 'Ошибка сервера' });
+      }
+      });
+};
