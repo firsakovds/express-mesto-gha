@@ -78,7 +78,7 @@ module.exports.dislikeCard = (req, res) => {
 
   })
   .catch(() => {
-    return res.status(500).send({message: 'Неверный id'});
+    return res.status(400).send({message: 'Неверный id'});
   })
 
 }
