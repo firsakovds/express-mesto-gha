@@ -3,10 +3,16 @@
 //Контроллер в express также называют «последней мидлвэрой».
 //Потому что внутри неё мы не вызываем next, а возвращаем ответ пользователю.
 const User = require("../models/user");
-//создать юзера
+const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
+//создать юзера 2. Доработайте контроллер createUser
 module.exports.createUsers = (req, res) => {
-  const { name, about, avatar } = req.body;
-  return User.create({ name, about, avatar })
+  const { name, about, avatar, email, password } = req.body;
+ // return User.create({ name, about, avatar, email, password: hash})
+  bcrypt.hash(password, 10)
+    .then((hash) => { return User.create({
+      name, about, avatar, email, password: hash
+    })})
     .then((user) => {
       return res.status(201).send({ user });
     })
@@ -19,6 +25,42 @@ module.exports.createUsers = (req, res) => {
       }
     });
 };
+
+//3. Создайте контроллер login
+module.exports.login = (req, res) => {
+  const { email, password } = req.body;
+
+  return User.findUserByCredentials(email, password)
+    .then((user) => {
+      // аутентификация успешна! пользователь в переменной user
+      const token = jwt.sign(
+        { _id: user._id },//Пейлоуд токена — зашифрованный в строку объект пользователя.
+        'some-secret-key',
+        { expiresIn: '7d'} // токен будет просрочен через 7 дней после создания
+      );
+
+      // вернём токен
+      res.send({ token });
+    })
+    .catch((err) => {
+      // ошибка аутентификации
+      res
+        .status(401)
+        .send({ message: err.message });
+    });
+};
+
+
+
+
+
+
+
+
+
+
+
+
 //найдем всех юзеров
 module.exports.getUsers = (req, res) => {
   return User.find({})
