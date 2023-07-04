@@ -50,7 +50,25 @@ module.exports.login = (req, res) => {
     });
 };
 
-
+//6. Создайте контроллер и роут для получения информации о пользователе
+module.exports.getCurrentUser = (req, res) => {
+  const { userId } = req.params;
+  return User.findById(userId)
+    .then((user) => {
+      if (!user) {
+        return res.status(404).send({ message: "Юзер не найден" });
+      }
+      return res.status(200).send(user);
+    })
+    .catch((err) => {
+      if (err.name === "CastError") {
+        return res.status(400).send({ message: "Неверный id" });
+        //console.log(err)
+      } else {
+        return res.status(500).send({ message: "Ошибка сервера" });
+      }
+    });
+};
 
 
 

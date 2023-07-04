@@ -4,7 +4,8 @@ const bodyParser = require("body-parser");
 const userRouter = require("./routes/users");
 const cardRouter = require("./routes/cards");
 const helmet = require("helmet");
-
+const {login, createUsers} = require("./controllers/users");
+const auth = require('./middlewares/auth');
 // Слушаем 3000 порт
 const { PORT = 3000 } = process.env;
 
@@ -27,6 +28,11 @@ app.use((req, res, next) => {
 
   next();
 });
+//4. Создайте роут для логина и регистрации
+app.post('/signin', login);
+app.post('/signup', createUsers);
+app.use(auth);
+
 
 app.use("/", userRouter);
 app.use("/", cardRouter);
