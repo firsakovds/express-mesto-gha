@@ -21,13 +21,13 @@ const app = express();
 app.use(helmet());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use((req, res, next) => {
-  req.user = {
-    _id: "6494b360c1eeb0c0cda3100b", // вставьте сюда _id созданного в предыдущем пункте пользователя
-  };
-
-  next();
-});
+//app.use((req, res, next) => {
+ // req.user = {
+ //   _id: "6494b360c1eeb0c0cda3100b", // вставьте сюда _id созданного в предыдущем пункте пользователя
+ // };
+//
+//  next();
+//});
 //4. Создайте роут для логина и регистрации
 app.post('/signin', login);
 app.post('/signup', createUsers);
