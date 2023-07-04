@@ -24,11 +24,11 @@ const userSchema = new mongoose.Schema(
       type: String,
       unique: true, //У каждого пользователя email должен быть уникальным и валидироваться на соответствие схеме электронной почты.
       required: true,
-      //validate: {
-      //  validator: (v) => isEmail(v),
-      //  message: 'Неправильный формат почты',
-     // },
-     validate: {validator: isEmail},
+      validate: {
+        validator: (v) => isEmail(v),
+        message: 'Неправильный формат почты',
+      },
+     //validate: {validator: isEmail},
     },
     password: {
       type: String,
