@@ -142,8 +142,10 @@ module.exports.updateAvatar = (req, res) => {
     .then((user) => {
       if (!user) {
         return res.status(404).send({ message: "Юзер не найден" });
+      } else {
+        return res.status(200).send(user);
       }
-      return res.status(200).send(user);
+
     })
     .catch((err) => {
       if (err.name === "ValidationError") {

@@ -23,7 +23,7 @@ router.post("/cards", celebrate({
 router.delete("/cards/:cardId", celebrate({
   // валидируем параметры
   params: Joi.object().keys({
-    postId: Joi.string().alphanum().length(24),
+    cardId: Joi.string().alphanum().length(24),
   }),
 }), deleteCards);
 
