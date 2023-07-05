@@ -21,12 +21,9 @@ router.post("/cards", celebrate({
 
 //router.delete("/cards/:cardId", deleteCards);
 router.delete("/cards/:cardId", celebrate({
-  body: Joi.object().keys({
-    //email: Joi.string().required().email(),
-    //password: Joi.string().required().min(8),
-    name: Joi.string().min(2).max(30),
-    owner: Joi.string().min(2).max(30),
-    link: Joi.string().regex(/^(https?:\/\/)?([\w-]{1,32}\.[\w-]{1,32})[^\s@]*/)
+  // валидируем параметры
+  params: Joi.object().keys({
+    postId: Joi.string().alphanum().length(24),
   }),
 }), deleteCards);
 
@@ -34,6 +31,21 @@ router.delete("/cards/:cardId", celebrate({
 
 
 
-router.put("/cards/:cardId/likes", likeCard);
-router.delete("/cards/:cardId/likes", dislikeCard);
+//router.put("/cards/:cardId/likes", likeCard);
+router.put("/cards/:cardId/likes", celebrate({
+  // валидируем параметры
+  params: Joi.object().keys({
+    postId: Joi.string().alphanum().length(24),
+  }),
+}), likeCard);
+
+
+//router.delete("/cards/:cardId/likes", dislikeCard);
+router.delete("/cards/:cardId/likes", celebrate({
+  // валидируем параметры
+  params: Joi.object().keys({
+    postId: Joi.string().alphanum().length(24),
+  }),
+}), dislikeCard);
+
 module.exports = router;
