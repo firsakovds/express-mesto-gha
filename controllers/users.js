@@ -15,15 +15,11 @@ module.exports.createUsers = (req, res) => {
     })})
     .then((user) => {
       return res.status(201).send({
-        data: {
           name: user.name,
           about: user.about,
           avatar: user.avatar,
           email: user.email,
           _id: user._id
-        },
-
-
       });
     })
     .catch((err) => {
