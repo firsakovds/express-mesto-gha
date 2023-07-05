@@ -11,9 +11,9 @@ router.get("/cards", getCards);
 //router.post("/cards", createCards);
 router.post("/cards", celebrate({
   body: Joi.object().keys({
-    name: Joi.string().min(2).max(30),
+    name: Joi.string().min(2).max(30).required(),
     //owner: Joi.string().min(2).max(30),
-    link: Joi.string().regex(/^(https?:\/\/)?([\w-]{1,32}\.[\w-]{1,32})[^\s@]*/)
+    link: Joi.string().required().regex(/^(https?:\/\/)?([\w-]{1,32}\.[\w-]{1,32})[^\s@]*/)
   }),
 }), createCards);
 
