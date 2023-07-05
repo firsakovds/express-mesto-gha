@@ -8,7 +8,17 @@ const {
   dislikeCard,
 } = require("../controllers/cards");
 router.get("/cards", getCards);
-router.post("/cards", createCards);
+//router.post("/cards", createCards);
+router.post("/cards", celebrate({
+  body: Joi.object().keys({
+    name: Joi.string().min(2).max(30),
+    //owner: Joi.string().min(2).max(30),
+    link: Joi.string().regex(/^(https?:\/\/)?([\w-]{1,32}\.[\w-]{1,32})[^\s@]*/)
+  }),
+}), createCards);
+
+
+
 //router.delete("/cards/:cardId", deleteCards);
 router.delete("/cards/:cardId", celebrate({
   body: Joi.object().keys({
