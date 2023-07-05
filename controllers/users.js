@@ -18,7 +18,8 @@ module.exports.createUsers = (req, res) => {
         name: user.name,
         about: user.about,
         avatar: user.avatar,
-        email: user.email
+        email: user.email,
+        _id: user._id
 
       });
     })
@@ -58,13 +59,13 @@ module.exports.login = (req, res) => {
 
 //6. Создайте контроллер и роут для получения информации о пользователе
 module.exports.getCurrentUser = (req, res) => {
- // const { userId } = req.params;
+  //const { userId } = req.params;
   return User.findById(req.user._id)
     .then((user) => {
       if (!user) {
         return res.status(404).send({ message: "Юзер не найден" });
       } else {
-        return res.status(200).send({ data: user });
+        return res.status(200).send({ user });
       }
     })
     .catch((err) => {
@@ -76,6 +77,8 @@ module.exports.getCurrentUser = (req, res) => {
       }
     });
 };
+
+
 
 
 
@@ -98,8 +101,8 @@ module.exports.getUsers = (req, res) => {
 };
 //найдем конкретного юзера
 module.exports.getUserId = (req, res) => {
-  //const { userId } = req.params;
-  return User.findById(req.user._id)
+  const { userId } = req.params;
+  return User.findById(userId)
     .then((user) => {
       if (!user) {
         return res.status(404).send({ message: "Юзер не найден" });
