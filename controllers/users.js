@@ -7,14 +7,20 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 //создать юзера 2. Доработайте контроллер createUser
 module.exports.createUsers = (req, res) => {
-  const { name, about, avatar, email} = req.body;
+  const { name, about, avatar, email, password } = req.body;
  // return User.create({ name, about, avatar, email, password: hash})
   bcrypt.hash(password, 10)
     .then((hash) => { return User.create({
       name, about, avatar, email, password: hash
     })})
     .then((user) => {
-      return res.status(201).send({ user });
+      return res.status(201).send({
+        name: user.name,
+        about: user.about,
+        avatar: user.avatar,
+        email: user.email
+
+      });
     })
     .catch((err) => {
       if (err.name === "ValidationError") {
