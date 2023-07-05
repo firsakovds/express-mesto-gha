@@ -98,8 +98,8 @@ module.exports.getUsers = (req, res) => {
 };
 //найдем конкретного юзера
 module.exports.getUserId = (req, res) => {
-  const { userId } = req.params;
-  return User.findById(userId)
+  //const { userId } = req.params;
+  return User.findById(req.user._id)
     .then((user) => {
       if (!user) {
         return res.status(404).send({ message: "Юзер не найден" });
