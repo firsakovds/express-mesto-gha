@@ -16,10 +16,6 @@ router.get("/users/:userId", celebrate({
     userId: Joi.string().alphanum().length(24),
   }),
 }), getUserId);
-
-
-
-
 //router.post("/users", createUsers);
 //router.patch("/users/me", updateUser);
 router.patch("/users/me", celebrate({
@@ -29,10 +25,6 @@ router.patch("/users/me", celebrate({
     //link: Joi.string().required().regex(/^(https?:\/\/)?([\w-]{1,32}\.[\w-]{1,32})[^\s@]*/)
   }),
 }), updateUser);
-
-
-
-
 //router.patch("/users/me/avatar", updateAvatar);
 router.patch("/users/me/avatar", celebrate({
   body: Joi.object().keys({
