@@ -12,7 +12,7 @@ router.get("/users", getUsers);
 router.get("/users/:userId", celebrate({
   // валидируем параметры
   params: Joi.object().keys({
-    userId: Joi.string().alphanum().length(24).hex(),
+    userId: Joi.string().alphanum(),
   }),
 }), getUserId);
 //router.post("/users", createUsers);

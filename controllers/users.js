@@ -15,11 +15,14 @@ module.exports.createUsers = (req, res) => {
     })})
     .then((user) => {
       return res.status(201).send({
-        name: user.name,
-        about: user.about,
-        avatar: user.avatar,
-        email: user.email,
-        _id: user._id
+        data: {
+          name: user.name,
+          about: user.about,
+          avatar: user.avatar,
+          email: user.email,
+          _id: user._id
+        },
+
 
       });
     })
@@ -65,7 +68,7 @@ module.exports.getCurrentUser = (req, res) => {
       if (!user) {
         return res.status(404).send({ message: "Юзер не найден" });
       } else {
-        return res.status(200).send({ user });
+        return res.status(200).send({data:user });
       }
     })
     .catch((err) => {
