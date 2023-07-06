@@ -7,6 +7,7 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const HttpConflictError = require('../errors/httpConflictError');
 const BadRequestError = require('../errors/BadRequestError');
+const UserNotFound = require('../errors/UserNotFound');
 //создать юзера 2. Доработайте контроллер createUser
 module.exports.createUsers = (req, res, next) => {
   const { name, about, avatar, email, password } = req.body;
@@ -72,18 +73,21 @@ module.exports.getCurrentUser = (req, res) => {
   return User.findById(userId)
     .then((user) => {
       if (!user) {
-        return res.status(404).send({ message: "Юзер не найден" });
+       // return res.status(404).send({ message: "Юзер не найден" });
+       throw new UserNotFound('Юзер не найден')
       } else {
         return res.status(200).send({user});
       }
     })
     .catch((err) => {
       if (err.name === "CastError") {
-        return res.status(400).send({ message: "Неверный id" });
+        //return res.status(400).send({ message: "Неверный id" });
+        return next(new BadRequestError('Неверный id'))
         //console.log(err)
-      } else {
-        return res.status(500).send({ message: "Ошибка сервера" });
-      }
+      } //else {
+       // return res.status(500).send({ message: "Ошибка сервера" });
+      //}
+      next(err)
     });
 };
 
