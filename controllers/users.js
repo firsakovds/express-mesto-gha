@@ -68,7 +68,7 @@ module.exports.login = (req, res) => {
 };
 
 //6. Создайте контроллер и роут для получения информации о пользователе
-module.exports.getCurrentUser = (req, res) => {
+module.exports.getCurrentUser = (req, res, next) => {
   const { userId } = req.params;
   return User.findById(userId)
     .then((user) => {

@@ -51,7 +51,7 @@ module.exports.deleteCards = (req, res) => {
     });
 };
 // поставим лайк
-module.exports.likeCard = (req, res) => {
+module.exports.likeCard = (req, res, next) => {
   Card.findByIdAndUpdate(
     req.params.cardId,
     { $addToSet: { likes: req.user._id } }, // добавить _id в массив, если его там нет
