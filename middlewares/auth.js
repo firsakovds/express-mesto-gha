@@ -5,9 +5,11 @@ const handleAuthError = (res) => {
     .status(401)
     .send({ message: 'Необходима авторизация' });
 };
-//const extractBearerToken = (header) => {
-  //return header.replace('Bearer ', '');
-//};
+
+const extractBearerToken = (headers) => {
+  return headers.replace('Bearer ', '');
+};
+
 module.exports = (req, res, next) => {
   const { authorization } = req.headers;
 
@@ -15,7 +17,7 @@ module.exports = (req, res, next) => {
     return handleAuthError(res);
   }
 
-  const token = authorization.replace('Bearer ', '');
+  const token = extractBearerToken(authorization);
   let payload;
 
   try {
