@@ -40,8 +40,10 @@ module.exports.deleteCards = (req, res, next) => {
   return Card.findByIdAndDelete(cardId)
     .then((card) => {
       if (!card) {
-        throw new HttpForbiddenError('Карточка не найдена')
+        throw new UserNotFound('Карточка не найдена')
         //return res.status(404).send({ message: "Карточка не найдена" });
+      } if (JSON.stringify(card.owner) !== JSON.stringify(req.user._id)) {
+        throw new HttpForbiddenError('Карточка не ваша')
       } else {
         return res.status(200).send(card);
       }
