@@ -11,6 +11,12 @@ const cardSchema = new mongoose.Schema(
     link: {
       type: String, // тип — String
       required: [true, 'Поле "link" должно быть заполнено'],
+      validate: {
+        validator() {
+          return /^(https?:\/\/)?([\w-]{1,32}\.[\w-]{1,32})[^\s@]*/
+        },
+
+      },
     },
     owner: {
       type: String, // тип — String

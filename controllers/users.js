@@ -30,8 +30,6 @@ module.exports.createUsers = (req, res, next) => {
         // Обработка ошибки
         return next(new HttpConflictError('пользователь пытается зарегистрироваться по уже существующему в базе email'))
     }
-
-
       if (err.name === "ValidationError") {
       //  return res.status(400).send({ message: "Ошибка валидации" });
         //console.log(err)
@@ -103,36 +101,40 @@ module.exports.getCurrentUser = (req, res, next) => {
 
 
 //найдем всех юзеров
-module.exports.getUsers = (req, res) => {
+module.exports.getUsers = (req, res, next) => {
   return User.find({})
     .then((user) => {
       return res.status(200).send({ user });
     })
-    .catch(() => {
-      return res.status(500).send({ message: "Ошибка сервера" });
+    .catch((err) => {
+      //return res.status(500).send({ message: "Ошибка сервера" });
+      next(err)
     });
 };
 //найдем конкретного юзера
-module.exports.getUserId = (req, res) => {
+module.exports.getUserId = (req, res, next) => {
   const { userId } = req.params;
   return User.findById(userId)
     .then((user) => {
       if (!user) {
-        return res.status(404).send({ message: "Юзер не найден" });
+        throw new UserNotFound('Юзер не найден')
+       // return res.status(404).send({ message: "Юзер не найден" });
       }
       return res.status(200).send({user});
     })
     .catch((err) => {
       if (err.name === "CastError") {
-        return res.status(400).send({ message: "Неверный id" });
+        return next(new BadRequestError('Неверный id'))
+       // return res.status(400).send({ message: "Неверный id" });
         //console.log(err)
-      } else {
-        return res.status(500).send({ message: "Ошибка сервера" });
-      }
+      } //else {
+        //return res.status(500).send({ message: "Ошибка сервера" });
+      //}
+      next(err)
     });
 };
 //обновим профиль
-module.exports.updateUser = (req, res) => {
+module.exports.updateUser = (req, res, next) => {
   const { name, about } = req.body;
   return User.findByIdAndUpdate(
     req.user._id,
@@ -141,21 +143,24 @@ module.exports.updateUser = (req, res) => {
   )
     .then((user) => {
       if (!user) {
-        return res.status(404).send({ message: "Юзер не найден" });
+        throw new UserNotFound('Юзер не найден')
+        //return res.status(404).send({ message: "Юзер не найден" });
       }
       return res.status(200).send({user});
     })
     .catch((err) => {
       if (err.name === "ValidationError") {
-        return res.status(400).send({ message: "Ошибка валидации" });
+        return next(new BadRequestError('Ошибка валидации'))
+        //return res.status(400).send({ message: "Ошибка валидации" });
         //console.log(err)
-      } else {
-        return res.status(500).send({ message: "Ошибка сервера" });
-      }
+      }// else {
+       // return res.status(500).send({ message: "Ошибка сервера" });
+      //}
+      next(err)
     });
 };
 //обновим аватар
-module.exports.updateAvatar = (req, res) => {
+module.exports.updateAvatar = (req, res, next) => {
   const { avatar } = req.body;
   return User.findByIdAndUpdate(
     req.user._id,
@@ -164,7 +169,8 @@ module.exports.updateAvatar = (req, res) => {
   )
     .then((user) => {
       if (!user) {
-        return res.status(404).send({ message: "Юзер не найден" });
+        throw new UserNotFound('Юзер не найден')
+        //return res.status(404).send({ message: "Юзер не найден" });
       } else {
         return res.status(200).send({user});
       }
@@ -172,10 +178,12 @@ module.exports.updateAvatar = (req, res) => {
     })
     .catch((err) => {
       if (err.name === "ValidationError") {
-        return res.status(400).send({ message: "Ошибка валидации" });
+        return next(new BadRequestError('Ошибка валидации'))
+        //return res.status(400).send({ message: "Ошибка валидации" });
         //console.log(err)
-      } else {
-        return res.status(500).send({ message: "Ошибка сервера" });
-      }
+      }// else {
+       // return res.status(500).send({ message: "Ошибка сервера" });
+     // }
+     next(err)
     });
 };

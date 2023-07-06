@@ -37,12 +37,14 @@ module.exports.createCards = (req, res, next) => {
 //удалим карточку
 module.exports.deleteCards = (req, res, next) => {
   const { cardId } = req.params;
+  const ownerId = card.owner.toString();
+  const userId = req.user._id;
   return Card.findByIdAndDelete(cardId)
     .then((card) => {
       if (!card) {
         throw new UserNotFound('Карточка не найдена')
         //return res.status(404).send({ message: "Карточка не найдена" });
-      } if (JSON.stringify(card.owner) !== JSON.stringify(req.user._id)) {
+      } if (ownerId !== userId) {
         throw new HttpForbiddenError('Карточка не ваша')
       } else {
         return res.status(200).send(card);
