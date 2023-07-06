@@ -34,5 +34,5 @@ router.patch("/users/me/avatar", celebrate({
 }), updateAvatar);
 
 //6. Создайте контроллер и роут для получения информации о пользователе
-router.get("/users/me", getCurrentUser)
+router.get("/users/me", getCurrentUser);
 module.exports = router;

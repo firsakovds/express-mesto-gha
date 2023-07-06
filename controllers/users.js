@@ -5,6 +5,7 @@
 const User = require("../models/user");
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const HttpConflictError = require('../errors/httpConflictError')
 //создать юзера 2. Доработайте контроллер createUser
 module.exports.createUsers = (req, res) => {
   const { name, about, avatar, email, password } = req.body;
@@ -23,6 +24,12 @@ module.exports.createUsers = (req, res) => {
       });
     })
     .catch((err) => {
+      if (err.code === 11000) {
+        // Обработка ошибки
+        return next(new HttpConflictError('пользователь пытается зарегистрироваться по уже существующему в базе email'))
+    }
+
+
       if (err.name === "ValidationError") {
         return res.status(400).send({ message: "Ошибка валидации" });
         //console.log(err)

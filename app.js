@@ -52,7 +52,7 @@ app.post('/signup', celebrate({
 
 
 
-app.use(auth);
+//app.use(auth);
 
 //router.post('/posts', celebrate({
   //body: Joi.object().keys({
@@ -80,6 +80,7 @@ app.use((err, req, res, next) => {
         ? 'На сервере произошла ошибка'
         : message
     });
+    next();
 });
 
 
