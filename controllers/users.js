@@ -5,9 +5,10 @@
 const User = require("../models/user");
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const HttpConflictError = require('../errors/httpConflictError')
+const HttpConflictError = require('../errors/httpConflictError');
+const BadRequestError = require('../errors/BadRequestError');
 //создать юзера 2. Доработайте контроллер createUser
-module.exports.createUsers = (req, res) => {
+module.exports.createUsers = (req, res, next) => {
   const { name, about, avatar, email, password } = req.body;
  // return User.create({ name, about, avatar, email, password: hash})
   bcrypt.hash(password, 10)
@@ -31,11 +32,13 @@ module.exports.createUsers = (req, res) => {
 
 
       if (err.name === "ValidationError") {
-        return res.status(400).send({ message: "Ошибка валидации" });
+      //  return res.status(400).send({ message: "Ошибка валидации" });
         //console.log(err)
-      } else {
-        return res.status(500).send({ message: "Ошибка сервера" });
-      }
+        return next(new BadRequestError('Ошибка валидации'))
+      }// else {
+        //return res.status(500).send({ message: "Ошибка сервера" });
+      //}
+      next(err);
     });
 };
 
