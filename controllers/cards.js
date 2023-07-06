@@ -2,18 +2,20 @@ const Card = require("../models/card");
 const HttpConflictError = require('../errors/httpConflictError');
 const BadRequestError = require('../errors/BadRequestError');
 const UserNotFound = require('../errors/UserNotFound');
+const HttpForbiddenError = require('../errors/HttpForbiddenError')
 //найдем все карточки
-module.exports.getCards = (req, res) => {
+module.exports.getCards = (req, res, next) => {
   return Card.find({})
     .then((card) => {
       return res.status(200).send({ card });
     })
-    .catch(() => {
-      return res.status(500).send({ message: "Ошибка сервера" });
+    .catch((err) => {
+      //return res.status(500).send({ message: "Ошибка сервера" });
+      next(err)
     });
 };
 //создадим каточку
-module.exports.createCards = (req, res) => {
+module.exports.createCards = (req, res, next) => {
   const { name, link } = req.body;
   const owner = req.user._id;
 
@@ -23,31 +25,36 @@ module.exports.createCards = (req, res) => {
     })
     .catch((err) => {
       if (err.name === "ValidationError") {
-        return res.status(400).send({ message: "Ошибка валидации" });
+        return next(new BadRequestError('Ошибка валидации'))
+        //return res.status(400).send({ message: "Ошибка валидации" });
         //console.log(err)
-      } else {
-        return res.status(500).send({ message: "Ошибка сервера" });
-      }
+      }// else {
+       // return res.status(500).send({ message: "Ошибка сервера" });
+      //}
+      next(err)
     });
 };
 //удалим карточку
-module.exports.deleteCards = (req, res) => {
+module.exports.deleteCards = (req, res, next) => {
   const { cardId } = req.params;
   return Card.findByIdAndDelete(cardId)
     .then((card) => {
       if (!card) {
-        return res.status(404).send({ message: "Карточка не найдена" });
+        throw new UserNotFound('Карточка не найдена')
+        //return res.status(404).send({ message: "Карточка не найдена" });
       } else {
         return res.status(200).send(card);
       }
     })
     .catch((err) => {
       if (err.name === "CastError") {
-        return res.status(400).send({ message: "Неверный id" });
+        return next(new BadRequestError('Неверный id'))
+       // return res.status(400).send({ message: "Неверный id" });
         //console.log(err)
-      } else {
-        return res.status(500).send({ message: "Ошибка сервера" });
-      }
+      } //else {
+        //return res.status(500).send({ message: "Ошибка сервера" });
+      //}
+      next(err)
     });
 };
 // поставим лайк
