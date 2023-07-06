@@ -76,7 +76,7 @@ module.exports.getCurrentUser = (req, res) => {
        // return res.status(404).send({ message: "Юзер не найден" });
        throw new UserNotFound('Юзер не найден')
       } else {
-        return res.status(200).send({user});
+        return res.status(200).send(user);
       }
     })
     .catch((err) => {

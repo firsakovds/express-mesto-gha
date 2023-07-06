@@ -1,4 +1,7 @@
 const Card = require("../models/card");
+const HttpConflictError = require('../errors/httpConflictError');
+const BadRequestError = require('../errors/BadRequestError');
+const UserNotFound = require('../errors/UserNotFound');
 //найдем все карточки
 module.exports.getCards = (req, res) => {
   return Card.find({})
@@ -56,18 +59,21 @@ module.exports.likeCard = (req, res) => {
   )
     .then((card) => {
       if (!card) {
-        return res.status(404).send({ message: "Карточка не найдена" });
+       // return res.status(404).send({ message: "Карточка не найдена" });
+       throw new UserNotFound('Карточка не найдена')
       } else {
         return res.status(200).send(card);
       }
     })
     .catch((err) => {
       if (err.name === "CastError") {
-        return res.status(400).send({ message: "Неверный id" });
+        //return res.status(400).send({ message: "Неверный id" });
+        return next(new BadRequestError('Неверный id'))
         //console.log(err)
-      } else {
-        return res.status(500).send({ message: "Ошибка сервера" });
-      }
+      }// else {
+       // return res.status(500).send({ message: "Ошибка сервера" });
+      //}
+      next(err);
     });
 };
 //уберем лайк
