@@ -65,29 +65,7 @@ module.exports.login = (req, res) => {
     });
 };
 
-//6. Создайте контроллер и роут для получения информации о пользователе
-module.exports.getCurrentUser = (req, res, next) => {
-  //const { userId } = req.params;
-  return User.findById(req.user._id)
-    .then((user) => {
-      if (!user) {
-       // return res.status(404).send({ message: "Юзер не найден" });
-       throw new UserNotFound('Юзер не найден')
-      } else {
-        return res.status(200).send(user);
-      }
-    })
-    .catch((err) => {
-      if (err.name === "CastError") {
-        //return res.status(400).send({ message: "Неверный id" });
-        return next(new BadRequestError('Неверный id'))
-        //console.log(err)
-      } //else {
-       // return res.status(500).send({ message: "Ошибка сервера" });
-      //}
-      next(err)
-    });
-};
+
 //найдем всех юзеров
 module.exports.getUsers = (req, res, next) => {
   return User.find({})
@@ -173,5 +151,28 @@ module.exports.updateAvatar = (req, res, next) => {
        // return res.status(500).send({ message: "Ошибка сервера" });
      // }
      next(err)
+    });
+};
+//6. Создайте контроллер и роут для получения информации о пользователе
+module.exports.getCurrentUser = (req, res, next) => {
+  //const { userId } = req.params;
+  return User.findById(req.user._id)
+    .then((user) => {
+      if (!user) {
+       // return res.status(404).send({ message: "Юзер не найден" });
+       throw new UserNotFound('Юзер не найден')
+      } else {
+        return res.status(200).send(user);
+      }
+    })
+    .catch((err) => {
+      if (err.name === "CastError") {
+        //return res.status(400).send({ message: "Неверный id" });
+        return next(new BadRequestError('Неверный id'))
+        //console.log(err)
+      } //else {
+       // return res.status(500).send({ message: "Ошибка сервера" });
+      //}
+      next(err)
     });
 };
