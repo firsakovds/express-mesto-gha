@@ -77,7 +77,7 @@ module.exports.likeCard = (req, res, next) => {
     });
 };
 //уберем лайк
-module.exports.dislikeCard = (req, res) => {
+module.exports.dislikeCard = (req, res, next) => {
   Card.findByIdAndUpdate(
     req.params.cardId,
     { $pull: { likes: req.user._id } }, // убрать _id из массива
@@ -85,7 +85,8 @@ module.exports.dislikeCard = (req, res) => {
   )
     .then((card) => {
       if (!card) {
-        return res.status(404).send({ message: "Карточка не найдена" });
+       // return res.status(404).send({ message: "Карточка не найдена" });
+       throw new UserNotFound('Карточка не найдена')
       } else {
         return res.status(200).send(card);
       }

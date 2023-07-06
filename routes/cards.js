@@ -35,7 +35,7 @@ router.delete("/cards/:cardId", celebrate({
 router.put("/cards/:cardId/likes", celebrate({
   // валидируем параметры
   params: Joi.object().keys({
-    postId: Joi.string().alphanum().length(24),
+    cardId: Joi.string().length(24).hex(),
   }),
 }), likeCard);
 
