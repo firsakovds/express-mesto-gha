@@ -29,7 +29,7 @@ module.exports.createCards = (req, res, next) => {
         //return res.status(400).send({ message: "Ошибка валидации" });
         //console.log(err)
       }// else {
-       // return res.status(500).send({ message: "Ошибка сервера" });
+      // return res.status(500).send({ message: "Ошибка сервера" });
       //}
       next(err)
     });
@@ -51,10 +51,10 @@ module.exports.deleteCards = (req, res, next) => {
     .catch((err) => {
       if (err.name === "CastError") {
         return next(new BadRequestError('Неверный id'))
-       // return res.status(400).send({ message: "Неверный id" });
+        // return res.status(400).send({ message: "Неверный id" });
         //console.log(err)
       } //else {
-        //return res.status(500).send({ message: "Ошибка сервера" });
+      //return res.status(500).send({ message: "Ошибка сервера" });
       //}
       next(err)
     });
@@ -68,8 +68,8 @@ module.exports.likeCard = (req, res, next) => {
   )
     .then((card) => {
       if (!card) {
-       // return res.status(404).send({ message: "Карточка не найдена" });
-       throw new UserNotFound('Карточка не найдена')
+        // return res.status(404).send({ message: "Карточка не найдена" });
+        throw new UserNotFound('Карточка не найдена')
       } else {
         return res.status(200).send(card);
       }
@@ -80,7 +80,7 @@ module.exports.likeCard = (req, res, next) => {
         return next(new BadRequestError('Неверный id'))
         //console.log(err)
       }// else {
-       // return res.status(500).send({ message: "Ошибка сервера" });
+      // return res.status(500).send({ message: "Ошибка сервера" });
       //}
       next(err);
     });
@@ -94,8 +94,8 @@ module.exports.dislikeCard = (req, res, next) => {
   )
     .then((card) => {
       if (!card) {
-       // return res.status(404).send({ message: "Карточка не найдена" });
-       throw new UserNotFound('Карточка не найдена')
+        // return res.status(404).send({ message: "Карточка не найдена" });
+        throw new UserNotFound('Карточка не найдена')
       } else {
         return res.status(200).send(card);
       }
@@ -106,11 +106,8 @@ module.exports.dislikeCard = (req, res, next) => {
         //return res.status(400).send({ message: "Неверный id" });
         //console.log(err)
       }// else {
-       // return res.status(500).send({ message: "Ошибка сервера" });
+      // return res.status(500).send({ message: "Ошибка сервера" });
       //}
       next(err)
     });
 };
-//module.exports.createCard = (req, res) => {
-// console.log(req.user._id); // _id станет доступен
-//};

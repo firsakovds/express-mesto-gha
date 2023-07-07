@@ -1,4 +1,3 @@
-// controllers/users.js
 // это файл контроллеров
 //Контроллер в express также называют «последней мидлвэрой».
 //Потому что внутри неё мы не вызываем next, а возвращаем ответ пользователю.
@@ -11,31 +10,33 @@ const UserNotFound = require('../errors/UserNotFound');
 //создать юзера 2. Доработайте контроллер createUser
 module.exports.createUsers = (req, res, next) => {
   const { name, about, avatar, email, password } = req.body;
- // return User.create({ name, about, avatar, email, password: hash})
+  // return User.create({ name, about, avatar, email, password: hash})
   bcrypt.hash(password, 10)
-    .then((hash) => { return User.create({
-      name, about, avatar, email, password: hash
-    })})
+    .then((hash) => {
+      return User.create({
+        name, about, avatar, email, password: hash
+      })
+    })
     .then((user) => {
       return res.status(201).send({
-          name: user.name,
-          about: user.about,
-          avatar: user.avatar,
-          email: user.email,
-          _id: user._id
+        name: user.name,
+        about: user.about,
+        avatar: user.avatar,
+        email: user.email,
+        _id: user._id
       });
     })
     .catch((err) => {
       if (err.code === 11000) {
         // Обработка ошибки
         return next(new HttpConflictError('пользователь пытается зарегистрироваться по уже существующему в базе email'))
-    }
+      }
       if (err.name === "ValidationError") {
-      //  return res.status(400).send({ message: "Ошибка валидации" });
+        //  return res.status(400).send({ message: "Ошибка валидации" });
         //console.log(err)
         return next(new BadRequestError('Ошибка валидации'))
       }// else {
-        //return res.status(500).send({ message: "Ошибка сервера" });
+      //return res.status(500).send({ message: "Ошибка сервера" });
       //}
       next(err);
     });
@@ -44,16 +45,14 @@ module.exports.createUsers = (req, res, next) => {
 //3. Создайте контроллер login
 module.exports.login = (req, res) => {
   const { email, password } = req.body;
-
   return User.findUserByCredentials(email, password)
     .then((user) => {
       // аутентификация успешна! пользователь в переменной user
       const token = jwt.sign(
         { _id: user._id },//Пейлоуд токена — зашифрованный в строку объект пользователя.
         'some-secret-key',
-        { expiresIn: '7d'} // токен будет просрочен через 7 дней после создания
+        { expiresIn: '7d' } // токен будет просрочен через 7 дней после создания
       );
-
       // вернём токен
       res.send({ token });
     })
@@ -64,7 +63,6 @@ module.exports.login = (req, res) => {
         .send({ message: err.message });
     });
 };
-
 
 //найдем всех юзеров
 module.exports.getUsers = (req, res, next) => {
@@ -85,7 +83,7 @@ module.exports.getUserId = (req, res, next) => {
     .then((user) => {
       if (!user) {
         throw new UserNotFound('Юзер не найден')
-       // return res.status(404).send({ message: "Юзер не найден" });
+        // return res.status(404).send({ message: "Юзер не найден" });
       }
       return res.status(200).send(user);
     })
@@ -93,10 +91,10 @@ module.exports.getUserId = (req, res, next) => {
       if (err.name === "CastError") {
 
         return next(new BadRequestError('Неверный id'))
-       // return res.status(400).send({ message: "Неверный id" });
+        // return res.status(400).send({ message: "Неверный id" });
 
       } //else {
-        //return res.status(500).send({ message: "Ошибка сервера" });
+      //return res.status(500).send({ message: "Ошибка сервера" });
       //}
       next(err)
     });
@@ -114,7 +112,7 @@ module.exports.updateUser = (req, res, next) => {
         throw new UserNotFound('Юзер не найден')
         //return res.status(404).send({ message: "Юзер не найден" });
       }
-      return res.status(200).send({user});
+      return res.status(200).send({ user });
     })
     .catch((err) => {
       if (err.name === "ValidationError") {
@@ -122,7 +120,7 @@ module.exports.updateUser = (req, res, next) => {
         //return res.status(400).send({ message: "Ошибка валидации" });
         //console.log(err)
       }// else {
-       // return res.status(500).send({ message: "Ошибка сервера" });
+      // return res.status(500).send({ message: "Ошибка сервера" });
       //}
       next(err)
     });
@@ -140,9 +138,8 @@ module.exports.updateAvatar = (req, res, next) => {
         throw new UserNotFound('Юзер не найден')
         //return res.status(404).send({ message: "Юзер не найден" });
       } else {
-        return res.status(200).send({user});
+        return res.status(200).send({ user });
       }
-
     })
     .catch((err) => {
       if (err.name === "ValidationError") {
@@ -150,9 +147,9 @@ module.exports.updateAvatar = (req, res, next) => {
         //return res.status(400).send({ message: "Ошибка валидации" });
         //console.log(err)
       }// else {
-       // return res.status(500).send({ message: "Ошибка сервера" });
-     // }
-     next(err)
+      // return res.status(500).send({ message: "Ошибка сервера" });
+      // }
+      next(err)
     });
 };
 //6. Создайте контроллер и роут для получения информации о пользователе
@@ -161,8 +158,8 @@ module.exports.getCurrentUser = (req, res, next) => {
   return User.findById(req.user._id)
     .then((user) => {
       if (!user) {
-       // return res.status(404).send({ message: "Юзер не найден" });
-       throw new UserNotFound('Юзер не найден')
+        // return res.status(404).send({ message: "Юзер не найден" });
+        throw new UserNotFound('Юзер не найден')
       } else {
         return res.status(200).send(user);
       }
@@ -173,7 +170,7 @@ module.exports.getCurrentUser = (req, res, next) => {
         return next(new BadRequestError('Неверный id'))
         //console.log(err)
       } //else {
-       // return res.status(500).send({ message: "Ошибка сервера" });
+      // return res.status(500).send({ message: "Ошибка сервера" });
       //}
       next(err)
     });
