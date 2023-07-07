@@ -80,19 +80,21 @@ module.exports.getUsers = (req, res, next) => {
 //найдем конкретного юзера
 module.exports.getUserId = (req, res, next) => {
   const { userId } = req.params;
+
   return User.findById(userId)
     .then((user) => {
       if (!user) {
         throw new UserNotFound('Юзер не найден')
        // return res.status(404).send({ message: "Юзер не найден" });
       }
-      return res.status(200).send({user});
+      return res.status(200).send(user);
     })
     .catch((err) => {
       if (err.name === "CastError") {
+
         return next(new BadRequestError('Неверный id'))
        // return res.status(400).send({ message: "Неверный id" });
-        //console.log(err)
+
       } //else {
         //return res.status(500).send({ message: "Ошибка сервера" });
       //}

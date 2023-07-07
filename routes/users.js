@@ -8,6 +8,7 @@ const {
   getCurrentUser
 } = require("../controllers/users");
 router.get("/users", getUsers);
+router.get("/users/me", getCurrentUser);
 //router.get("/users/:userId", getUserId);
 router.get("/users/:userId", celebrate({
   // валидируем параметры
@@ -34,14 +35,8 @@ router.patch("/users/me/avatar", celebrate({
 }), updateAvatar);
 
 //6. Создайте контроллер и роут для получения информации о пользователе
-//router.get("/users/me", getCurrentUser);
 
 
-router.get("/users/me", celebrate({
-  body: Joi.object().keys({
-    name: Joi.string().min(2).max(30).required(),
-    about: Joi.string().min(2).max(30).required(),
-    //link: Joi.string().required().regex(/^(https?:\/\/)?([\w-]{1,32}\.[\w-]{1,32})[^\s@]*/)
-  }),
-}), getCurrentUser);
+
+
 module.exports = router;
