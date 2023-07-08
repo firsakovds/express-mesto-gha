@@ -1,3 +1,4 @@
+const mongoose = require("mongoose");
 const Card = require("../models/card");
 const BadRequestError = require('../errors/BadRequestError');
 const UserNotFound = require('../errors/UserNotFound');
@@ -22,7 +23,7 @@ module.exports.createCards = (req, res, next) => {
       return res.status(201).send({ card });
     })
     .catch((err) => {
-      if (err.name === "ValidationError") {
+      if (err instanceof mongoose.Error.ValidationError) {
         return next(new BadRequestError('Ошибка валидации'))
       } else {
         next(err)
@@ -33,7 +34,7 @@ module.exports.createCards = (req, res, next) => {
 module.exports.deleteCards = (req, res, next) => {
   const { cardId } = req.params;
 
-  return Card.findByIdAndRemove(cardId)
+  return Card.findById(cardId)
     .then((card) => {
       if (!card) {
         throw new UserNotFound('Карточка не найдена')
@@ -44,7 +45,7 @@ module.exports.deleteCards = (req, res, next) => {
       }
     })
     .catch((err) => {
-      if (err.name === "CastError") {
+      if (err instanceof mongoose.Error.CastError) {
         return next(new BadRequestError('Неверный id'))
       } else {
         next(err)
@@ -66,7 +67,7 @@ module.exports.likeCard = (req, res, next) => {
       }
     })
     .catch((err) => {
-      if (err.name === "CastError") {
+      if (err instanceof mongoose.Error.CastError) {
         return next(new BadRequestError('Неверный id'))
       } else {
         next(err);
@@ -88,7 +89,7 @@ module.exports.dislikeCard = (req, res, next) => {
       }
     })
     .catch((err) => {
-      if (err.name === "CastError") {
+      if (err instanceof mongoose.Error.CastError) {
         return next(new BadRequestError('Неверный id'))
       } else {
         next(err)

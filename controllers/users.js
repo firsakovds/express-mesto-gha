@@ -1,5 +1,6 @@
 //Контроллер в express также называют «последней мидлвэрой».
 //Потому что внутри неё мы не вызываем next, а возвращаем ответ пользователю.
+const mongoose = require("mongoose");
 const User = require("../models/user");
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
@@ -7,6 +8,7 @@ const HttpConflictError = require('../errors/httpConflictError');
 const BadRequestError = require('../errors/BadRequestError');
 const UserNotFound = require('../errors/UserNotFound');
 const UnauthorizedError = require('../errors/UnauthorizedError');
+
 //создать юзера 2. Доработайте контроллер createUser
 module.exports.createUsers = (req, res, next) => {
   const { name, about, avatar, email, password } = req.body;
@@ -31,9 +33,7 @@ module.exports.createUsers = (req, res, next) => {
         // Обработка ошибки
         return next(new HttpConflictError('пользователь пытается зарегистрироваться по уже существующему в базе email'))
       }
-      if (err.name === "ValidationError") {
-        //  return res.status(400).send({ message: "Ошибка валидации" });
-        //console.log(err)
+      if (err instanceof mongoose.Error.ValidationError) {
         return next(new BadRequestError('Ошибка валидации'))
       } else {
         next(err);
@@ -84,7 +84,7 @@ module.exports.getUserId = (req, res, next) => {
       return res.status(200).send(user);
     })
     .catch((err) => {
-      if (err.name === "CastError") {
+      if (err instanceof mongoose.Error.CastError) {
         return next(new BadRequestError('Неверный id'))
       } else {
         next(err)
@@ -107,7 +107,7 @@ module.exports.updateUser = (req, res, next) => {
       return res.status(200).send({ user });
     })
     .catch((err) => {
-      if (err.name === "ValidationError") {
+      if (err instanceof mongoose.Error.ValidationError) {
         return next(new BadRequestError('Ошибка валидации'))
       } else {
         next(err)
@@ -132,7 +132,7 @@ module.exports.updateAvatar = (req, res, next) => {
       }
     })
     .catch((err) => {
-      if (err.name === "ValidationError") {
+      if (err instanceof mongoose.Error.ValidationError) {
         return next(new BadRequestError('Ошибка валидации'))
       } else {
         next(err)
