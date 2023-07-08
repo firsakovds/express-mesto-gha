@@ -34,15 +34,18 @@ module.exports.createCards = (req, res, next) => {
 module.exports.deleteCards = (req, res, next) => {
   const { cardId } = req.params;
 
-  return Card.findById(cardId)
+  Card.findById(cardId)
     .then((card) => {
       if (!card) {
         throw new UserNotFound('Карточка не найдена')
       } if (JSON.stringify(card.owner) !== JSON.stringify(req.user._id)) {
         throw new HttpForbiddenError('Карточка не ваша')
       } else {
-        return res.status(200).send(card);
+        return Card.findByIdAndDelete(cardId)
       }
+    })
+    .then(() => {
+      return res.status(200).send({ message: 'Карточка удалена' })
     })
     .catch((err) => {
       if (err instanceof mongoose.Error.CastError) {
