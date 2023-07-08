@@ -37,7 +37,7 @@ module.exports.createCards = (req, res, next) => {
 //удалим карточку
 module.exports.deleteCards = (req, res, next) => {
   const { cardId } = req.params;
-  return Card.findByIdAndDelete(cardId)
+  return Card.findById(cardId)
     .then((card) => {
       if (!card) {
         throw new UserNotFound('Карточка не найдена')
