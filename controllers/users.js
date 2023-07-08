@@ -7,6 +7,7 @@ const jwt = require('jsonwebtoken');
 const HttpConflictError = require('../errors/httpConflictError');
 const BadRequestError = require('../errors/BadRequestError');
 const UserNotFound = require('../errors/UserNotFound');
+const UnauthorizedError = require('../errors/UnauthorizedError');
 //создать юзера 2. Доработайте контроллер createUser
 module.exports.createUsers = (req, res, next) => {
   const { name, about, avatar, email, password } = req.body;
@@ -43,7 +44,7 @@ module.exports.createUsers = (req, res, next) => {
 };
 
 //3. Создайте контроллер login
-module.exports.login = (req, res) => {
+module.exports.login = (req, res, next) => {
   const { email, password } = req.body;
   return User.findUserByCredentials(email, password)
     .then((user) => {
@@ -58,9 +59,7 @@ module.exports.login = (req, res) => {
     })
     .catch((err) => {
       // ошибка аутентификации
-      res
-        .status(401)
-        .send({ message: err.message });
+      return next(new UnauthorizedError('Возникли проблемы с аутентификацией'));
     });
 };
 
@@ -93,9 +92,9 @@ module.exports.getUserId = (req, res, next) => {
         return next(new BadRequestError('Неверный id'))
         // return res.status(400).send({ message: "Неверный id" });
 
-      } //else {
-      //return res.status(500).send({ message: "Ошибка сервера" });
-      //}
+      } /*else {
+      return res.status(500).send({ message: "Ошибка сервера" });
+      }*/
       next(err)
     });
 };
@@ -165,13 +164,6 @@ module.exports.getCurrentUser = (req, res, next) => {
       }
     })
     .catch((err) => {
-      if (err.name === "CastError") {
-        //return res.status(400).send({ message: "Неверный id" });
-        return next(new BadRequestError('Неверный id'))
-        //console.log(err)
-      } //else {
-      // return res.status(500).send({ message: "Ошибка сервера" });
-      //}
       next(err)
     });
 };

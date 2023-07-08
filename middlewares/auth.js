@@ -1,8 +1,6 @@
 const jwt = require('jsonwebtoken');
 const UnauthorizedError = require('../errors/UnauthorizedError');
 //5. Сделайте мидлвэр для авторизации
-
-
 const extractBearerToken = (header) => {
   return header.replace('Bearer ', '');
 };
@@ -22,7 +20,7 @@ module.exports = (req, res, next) => {
   } catch (err) {
     return next(new UnauthorizedError('Необходима авторизация'));
   }
-
+  
   req.user = payload; // записываем пейлоуд в объект запроса
 
   next(); // пропускаем запрос дальше
