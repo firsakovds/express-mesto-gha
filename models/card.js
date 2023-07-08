@@ -15,7 +15,6 @@ const cardSchema = new mongoose.Schema(
         validator() {
           return /^(https?:\/\/)?([\w-]{1,32}\.[\w-]{1,32})[^\s@]*/
         },
-
       },
     },
     owner: {

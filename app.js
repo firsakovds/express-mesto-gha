@@ -7,6 +7,7 @@ const helmet = require("helmet");
 const { login, createUsers } = require("./controllers/users");
 const auth = require('./middlewares/auth');
 const { celebrate, Joi, errors } = require('celebrate');
+const BadRequestError = require('./errors/BadRequestError');
 // Слушаем 3000 порт
 const { PORT = 3000 } = process.env;
 mongoose
@@ -40,17 +41,12 @@ app.post('/signup', celebrate({
     avatar: Joi.string().regex(/^(https?:\/\/)?([\w-]{1,32}\.[\w-]{1,32})[^\s@]*/)
   }),
 }), createUsers);
-app.use(auth);
-//router.post('/posts', celebrate({
-//body: Joi.object().keys({
-// title: Joi.string().required().min(2).max(30),
-// text: Joi.string().required().min(2),
-//}),
-//}), createPost);
+//app.use(auth);
 app.use("/", userRouter);
 app.use("/", cardRouter);
-app.use("*", (req, res) => {
-  return res.status(404).send({ message: "Такого роута нет" });
+app.use("*", (req, res, next) => {
+   next(new BadRequestError('Такого роута нет'));
+   return
 });
 app.use(errors()); // обработчик ошибок celebrate
 app.use((err, req, res, next) => {

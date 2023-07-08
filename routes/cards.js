@@ -8,30 +8,21 @@ const {
   dislikeCard,
 } = require("../controllers/cards");
 router.get("/cards", getCards);
-//router.post("/cards", createCards);
+
 router.post("/cards", celebrate({
   body: Joi.object().keys({
     name: Joi.string().min(2).max(30).required(),
-    //owner: Joi.string().min(2).max(30),
     link: Joi.string().required().regex(/^(https?:\/\/)?([\w-]{1,32}\.[\w-]{1,32})[^\s@]*/)
   }),
 }), createCards);
 
-
-
-//router.delete("/cards/:cardId", deleteCards);
 router.delete("/cards/:cardId", celebrate({
   // валидируем параметры
   params: Joi.object().keys({
-    cardId: Joi.string().alphanum().length(24),
+    cardId: Joi.string().length(24).hex(),
   }),
 }), deleteCards);
 
-
-
-
-
-//router.put("/cards/:cardId/likes", likeCard);
 router.put("/cards/:cardId/likes", celebrate({
   // валидируем параметры
   params: Joi.object().keys({
@@ -39,12 +30,10 @@ router.put("/cards/:cardId/likes", celebrate({
   }),
 }), likeCard);
 
-
-//router.delete("/cards/:cardId/likes", dislikeCard);
 router.delete("/cards/:cardId/likes", celebrate({
   // валидируем параметры
   params: Joi.object().keys({
-    cardId: Joi.string().length(24).alphanum().hex(),
+    cardId: Joi.string().length(24).hex(),
   }),
 }), dislikeCard);
 
