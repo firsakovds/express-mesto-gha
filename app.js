@@ -41,7 +41,7 @@ app.post('/signup', celebrate({
     avatar: Joi.string().regex(/^(https?:\/\/)?([\w-]{1,32}\.[\w-]{1,32})[^\s@]*/)
   }),
 }), createUsers);
-//app.use(auth);
+app.use(auth);
 app.use("/", userRouter);
 app.use("/", cardRouter);
 app.use("*", (req, res, next) => {
