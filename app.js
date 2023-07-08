@@ -7,7 +7,7 @@ const helmet = require("helmet");
 const { login, createUsers } = require("./controllers/users");
 const auth = require('./middlewares/auth');
 const { celebrate, Joi, errors } = require('celebrate');
-const BadRequestError = require('./errors/BadRequestError');
+const UserNotFound = require("./errors/UserNotFound");
 // Слушаем 3000 порт
 const { PORT = 3000 } = process.env;
 mongoose
@@ -45,7 +45,7 @@ app.use(auth);
 app.use("/", userRouter);
 app.use("/", cardRouter);
 app.use("*", (req, res, next) => {
-   next(new BadRequestError('Такого роута нет'));
+   next(new UserNotFound('Такого роута нет'));
    return
 });
 app.use(errors()); // обработчик ошибок celebrate
