@@ -18,8 +18,7 @@ const cardSchema = new mongoose.Schema(
       },
     },
     owner: {
-      type: String, // тип — String
-      required: [true, 'Поле "owner" должно быть заполнено'],
+      type: String,
       ref: "user",
       type: mongoose.Schema.Types.ObjectId,
     },
