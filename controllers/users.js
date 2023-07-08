@@ -1,4 +1,3 @@
-// это файл контроллеров
 //Контроллер в express также называют «последней мидлвэрой».
 //Потому что внутри неё мы не вызываем next, а возвращаем ответ пользователю.
 const User = require("../models/user");
@@ -11,7 +10,7 @@ const UnauthorizedError = require('../errors/UnauthorizedError');
 //создать юзера 2. Доработайте контроллер createUser
 module.exports.createUsers = (req, res, next) => {
   const { name, about, avatar, email, password } = req.body;
-  // return User.create({ name, about, avatar, email, password: hash})
+
   bcrypt.hash(password, 10)
     .then((hash) => {
       return User.create({
@@ -36,16 +35,16 @@ module.exports.createUsers = (req, res, next) => {
         //  return res.status(400).send({ message: "Ошибка валидации" });
         //console.log(err)
         return next(new BadRequestError('Ошибка валидации'))
-      }// else {
-      //return res.status(500).send({ message: "Ошибка сервера" });
-      //}
-      next(err);
+      } else {
+        next(err);
+      }
     });
 };
 
 //3. Создайте контроллер login
 module.exports.login = (req, res, next) => {
   const { email, password } = req.body;
+
   return User.findUserByCredentials(email, password)
     .then((user) => {
       // аутентификация успешна! пользователь в переменной user
@@ -70,7 +69,6 @@ module.exports.getUsers = (req, res, next) => {
       return res.status(200).send({ user });
     })
     .catch((err) => {
-      //return res.status(500).send({ message: "Ошибка сервера" });
       next(err)
     });
 };
@@ -82,25 +80,21 @@ module.exports.getUserId = (req, res, next) => {
     .then((user) => {
       if (!user) {
         throw new UserNotFound('Юзер не найден')
-        // return res.status(404).send({ message: "Юзер не найден" });
       }
       return res.status(200).send(user);
     })
     .catch((err) => {
       if (err.name === "CastError") {
-
         return next(new BadRequestError('Неверный id'))
-        // return res.status(400).send({ message: "Неверный id" });
-
-      } /*else {
-      return res.status(500).send({ message: "Ошибка сервера" });
-      }*/
-      next(err)
+      } else {
+        next(err)
+      }
     });
 };
 //обновим профиль
 module.exports.updateUser = (req, res, next) => {
   const { name, about } = req.body;
+
   return User.findByIdAndUpdate(
     req.user._id,
     { name, about },
@@ -109,24 +103,21 @@ module.exports.updateUser = (req, res, next) => {
     .then((user) => {
       if (!user) {
         throw new UserNotFound('Юзер не найден')
-        //return res.status(404).send({ message: "Юзер не найден" });
       }
       return res.status(200).send({ user });
     })
     .catch((err) => {
       if (err.name === "ValidationError") {
         return next(new BadRequestError('Ошибка валидации'))
-        //return res.status(400).send({ message: "Ошибка валидации" });
-        //console.log(err)
-      }// else {
-      // return res.status(500).send({ message: "Ошибка сервера" });
-      //}
-      next(err)
+      } else {
+        next(err)
+      }
     });
 };
 //обновим аватар
 module.exports.updateAvatar = (req, res, next) => {
   const { avatar } = req.body;
+
   return User.findByIdAndUpdate(
     req.user._id,
     { avatar },
@@ -135,7 +126,7 @@ module.exports.updateAvatar = (req, res, next) => {
     .then((user) => {
       if (!user) {
         throw new UserNotFound('Юзер не найден')
-        //return res.status(404).send({ message: "Юзер не найден" });
+
       } else {
         return res.status(200).send({ user });
       }
@@ -143,21 +134,16 @@ module.exports.updateAvatar = (req, res, next) => {
     .catch((err) => {
       if (err.name === "ValidationError") {
         return next(new BadRequestError('Ошибка валидации'))
-        //return res.status(400).send({ message: "Ошибка валидации" });
-        //console.log(err)
-      }// else {
-      // return res.status(500).send({ message: "Ошибка сервера" });
-      // }
-      next(err)
+      } else {
+        next(err)
+      }
     });
 };
 //6. Создайте контроллер и роут для получения информации о пользователе
 module.exports.getCurrentUser = (req, res, next) => {
-  //const { userId } = req.params;
   return User.findById(req.user._id)
     .then((user) => {
       if (!user) {
-        // return res.status(404).send({ message: "Юзер не найден" });
         throw new UserNotFound('Юзер не найден')
       } else {
         return res.status(200).send(user);
